@@ -1,6 +1,6 @@
 # AI Workload Benchmarking Framework for Integrated and Mid-Range Graphics Systems
 
-A modular Python application that benchmarks lightweight AI workloads on consumer hardware, with special focus on Intel integrated GPUs (Intel Iris Xe). Features a futuristic blue-black dashboard for real-time benchmark monitoring, AI-powered analysis, and GenAI LLM benchmarking.
+A modular Python application that benchmarks lightweight AI workloads on consumer hardware, with special focus on Intel integrated GPUs (Intel Iris Xe). It includes a Streamlit dashboard for real-time monitoring, AI-assisted analysis, and GenAI LLM benchmarking across CPU and GPU-capable OpenVINO devices.
 
 ![Python](https://img.shields.io/badge/Python-3.10+-blue)
 ![Streamlit](https://img.shields.io/badge/Streamlit-1.28+-red)
@@ -44,23 +44,34 @@ A modular Python application that benchmarks lightweight AI workloads on consume
 ### 1. Clone and Install
 
 ```bash
+git lfs install
+git clone https://github.com/Deadly-Forces/ai-workload-benchmarking-framework.git
 cd ai-workload-benchmarking-framework
+git lfs pull
 pip install -r requirements.txt
 ```
 
-### 2. Download Models
+> **Important:** The repository uses Git LFS for the large TinyLlama OpenVINO model binary. If `git lfs pull` is skipped, GenAI benchmarks will fail until the LFS objects are downloaded.
+
+### 2. Models and Assets
 
 ```bash
-# Download inference models (MobileNetV2, YOLOv8n, ESPCN)
+# Refresh or re-download inference models (MobileNetV2, YOLOv8n, ESPCN)
 python scripts/download_models.py
 
-# Download GenAI LLM models (TinyLlama 1.1B INT4 — ~800 MB–2 GB)
+# Re-download the GenAI model from Hugging Face if needed
 python scripts/download_genai_models.py
 ```
 
-This downloads lightweight IR models into `app/models/` and GenAI models from HuggingFace.
+By default, the framework reads models from the repository-level `models/` directory, datasets from `datasets/`, and benchmark outputs from `storage/`. These locations can be overridden with:
 
-> **Note:** GenAI models are also downloaded automatically on first use if not present locally.
+- `BENCHMARK_MODELS_DIR`
+- `BENCHMARK_DATASETS_DIR`
+- `BENCHMARK_STORAGE_DIR`
+
+The repository already includes the main TinyLlama OpenVINO binary through Git LFS. The download scripts are still useful if you want to refresh local assets or rebuild missing files.
+
+> **Note:** Some models are also downloaded automatically on first use if not present locally.
 
 ### 3. Prepare Sample Datasets
 
@@ -68,7 +79,7 @@ This downloads lightweight IR models into `app/models/` and GenAI models from Hu
 python scripts/prepare_datasets.py
 ```
 
-Creates sample test images in `app/datasets/`.
+Creates sample test images in `datasets/`.
 
 ### 4. Run the Dashboard
 
@@ -203,6 +214,14 @@ cp .env.example .env
 
 Key settings are in `app/config/settings.py`.
 
+Useful path overrides:
+
+```bash
+BENCHMARK_MODELS_DIR=./models
+BENCHMARK_DATASETS_DIR=./datasets
+BENCHMARK_STORAGE_DIR=./storage
+```
+
 ## Limitations
 
 - Thermal monitoring requires platform-specific sensor access
@@ -210,6 +229,7 @@ Key settings are in `app/config/settings.py`.
 - Model accuracy is not the focus — this benchmarks inference speed
 - Designed for lightweight models only
 - GenAI models require ~1–2 GB disk space and sufficient RAM (~4 GB+)
+- Cloning the repository requires Git LFS to fetch the large TinyLlama model binary
 - Chat-driven intent parsing requires an internet connection on first use to download the DistilBERT model
 
 ## License
