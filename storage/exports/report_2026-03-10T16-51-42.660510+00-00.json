@@ -1,0 +1,120 @@
+[
+  {
+    "run_id": "run_20260310_164804_85de3a40",
+    "timestamp": "2026-03-10T16:48:07.803590+00:00",
+    "workload_type": "classification",
+    "model_name": "mobilenet-v2",
+    "backend": "openvino",
+    "device": "CPU",
+    "iterations": 20,
+    "warmup_iterations": 5,
+    "batch_size": 1,
+    "latency": {
+      "avg_ms": 7.7862950000508135,
+      "min_ms": 5.0164000003860565,
+      "max_ms": 10.984900000039488,
+      "p95_ms": 10.934645000133969,
+      "std_ms": 1.7025485651870402,
+      "all_latencies_ms": [
+        7.145200000195473,
+        8.02540000040608,
+        10.887800000091374,
+        7.148800000322808,
+        8.173600000191072,
+        10.984900000039488,
+        5.0164000003860565,
+        6.660499999270542,
+        9.224100000210456,
+        10.932000000138942,
+        6.936499999937951,
+        7.9115999997156905,
+        7.130200000574405,
+        5.460100000163948,
+        6.075499999496969,
+        6.523399999423418,
+        7.278299999597948,
+        6.883600000037404,
+        7.550199999968754,
+        9.777800000847492
+      ]
+    },
+    "throughput_fps": 102.16951864373237,
+    "resource_usage": {
+      "avg_cpu_percent": 0.0,
+      "max_cpu_percent": 0.0,
+      "avg_memory_percent": 90.1,
+      "max_memory_mb": 657.00390625,
+      "samples": [
+        {
+          "ts": 0.003470000000561413,
+          "cpu": 0.0,
+          "mem": 90.1,
+          "mem_mb": 657.00390625
+        }
+      ]
+    },
+    "thermal": {
+      "avg_temp_c": null,
+      "max_temp_c": null,
+      "available": false,
+      "samples": []
+    },
+    "consistency": null,
+    "system_info": {
+      "cpu": {
+        "name": "12th Gen Intel(R) Core(TM) i5-1240P",
+        "cores_physical": 12,
+        "cores_logical": 16,
+        "frequency_mhz": 1700.0,
+        "architecture": "X86_64"
+      },
+      "gpu": {
+        "name": "Intel(R) Iris(R) Xe Graphics",
+        "vendor": "Intel",
+        "driver_version": "32.0.101.7084",
+        "memory_mb": 2048,
+        "available": true
+      },
+      "memory": {
+        "total_gb": 15.68,
+        "available_gb": 1.43,
+        "percent_used": 90.9
+      },
+      "os_name": "Windows",
+      "os_version": "10.0.29531",
+      "python_version": "3.14.3",
+      "inference_devices": {
+        "openvino_devices": [
+          "CPU",
+          "GPU"
+        ],
+        "onnx_providers": [
+          "AzureExecutionProvider",
+          "CPUExecutionProvider"
+        ]
+      },
+      "suitability": {
+        "cpu": {
+          "rating": "Good",
+          "note": "16 logical cores"
+        },
+        "memory": {
+          "rating": "Good",
+          "note": "15.68 GB RAM"
+        },
+        "gpu": {
+          "rating": "Supported",
+          "note": "Intel(R) Iris(R) Xe Graphics (Intel iGPU)"
+        },
+        "openvino": {
+          "rating": "Available",
+          "note": "Devices: CPU, GPU"
+        }
+      },
+      "timestamp": "2026-03-10T16:48:07.802482+00:00"
+    },
+    "notes": "",
+    "errors": [],
+    "extra": {}
+  }
+]

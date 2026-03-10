@@ -1,0 +1,61 @@
+# Full Codebase Analysis — Cross-Platform Portability
+
+After tracing the entire execution pipeline, here is my analysis of whether the framework will work on any new laptop without manual intervention.
+
+## ✅ Will It Automatically Detect the System?
+
+**Yes.** The hardware detection in [profiler.py](file:///e:/Programming/Projects/GPGPU%20PROJECT/ai-workload-benchmarking-framework/app/features/system_profile/profiler.py) covers all platforms:
+
+| Platform     | CPU Detection                     | GPU Detection                           |
+|-------------|-----------------------------------|-----------------------------------------|
+| **Windows** | `py-cpuinfo` library              | `GPUtil` (NVIDIA) → PowerShell `Get-CimInstance` fallback (Intel/AMD) |
+| **Linux**   | `py-cpuinfo` library              | `GPUtil` (NVIDIA) → `lspci` fallback (Intel/AMD) |
+| **macOS**   | `py-cpuinfo` + `sysctl` (Apple Silicon) | `system_profiler SPDisplaysDataType` (Apple/Intel/AMD) |
+
+## ✅ Will It Automatically Choose the Right Backend & Device?
+
+**Yes.** The [recommender.py](file:///e:/Programming/Projects/GPGPU%20PROJECT/ai-workload-benchmarking-framework/app/features/system_profile/recommender.py) maps hardware → settings:
+
+| Hardware Detected      | Backend Selected | Device | Reasoning |
+|------------------------|-----------------|--------|-----------|
+| Intel GPU (Iris Xe, Arc) | OpenVINO | GPU | Best optimization for Intel silicon |
+| NVIDIA GPU             | ONNX Runtime    | GPU  | Uses CUDA execution provider |
+| AMD GPU                | ONNX Runtime    | GPU  | Uses DirectML/ROCm provider |
+| Apple Silicon Mac      | ONNX Runtime    | CPU  | CoreML acceleration under the hood |
+| Intel CPU (no GPU)     | OpenVINO        | CPU  | Optimized for Intel instruction sets |
+| Other CPU (no GPU)     | ONNX Runtime    | CPU  | Universal fallback |
+
+## ✅ Will It Automatically Pick the Right GenAI Model?
+
+**Yes.** The recommender checks available VRAM/RAM and selects the most powerful model the system can handle:
+
+| Available Memory | Model Selected | Why |
+|-----------------|----------------|-----|
+| ≥ 8000 MB       | Llama-3-8B (INT4) | Largest, most capable |
+| ≥ 4500 MB       | Phi-3-Mini (INT4)  | Mid-tier, strong performance |
+| ≥ 2000 MB       | TinyLlama 1.1B (INT4) | Lightweight, safe on low-end systems |
+| < 2000 MB       | TinyLlama 1.1B (INT4) | Fallback — smallest available model |
+
+## ✅ Will It Automatically Download the Model?
+
+**Yes.** [model_utils.py](file:///e:/Programming/Projects/GPGPU%20PROJECT/ai-workload-benchmarking-framework/app/features/genai/model_utils.py) checks if the model directory exists. If missing, it calls `huggingface_hub.snapshot_download()` automatically. The UI shows a "Downloading model..." status message during download.
+
+## ⚠️ One Requirement: `pip install`
+
+The user **must run `pip install -r requirements.txt`** on the new laptop first. All needed libraries ([openvino](file:///e:/Programming/Projects/GPGPU%20PROJECT/ai-workload-benchmarking-framework/app/features/system_profile/device_detector.py#10-24), `openvino-genai`, `onnxruntime`, `huggingface_hub`, `psutil`, `py-cpuinfo`, `GPUtil`, `streamlit`) are listed there. After that, `streamlit run app/main.py` handles everything else automatically.
+
+## End-to-End Flow on a New Laptop
+
+```mermaid
+flowchart TD
+    A[pip install -r requirements.txt] --> B[streamlit run app/main.py]
+    B --> C[profiler.py detects CPU/GPU/OS/RAM]
+    C --> D[recommender.py selects Backend + Device + Model]
+    D --> E[benchmark_form.py pre-fills UI with recommendations]
+    E --> F[User clicks 'Run Benchmark']
+    F --> G{Model downloaded locally?}
+    G -- Yes --> H[Run benchmark immediately]
+    G -- No --> I[Auto-download from HuggingFace]
+    I --> H
+    H --> J[Display results in dashboard]
+```

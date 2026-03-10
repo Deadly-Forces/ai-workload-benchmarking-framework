@@ -1,0 +1,47 @@
+/* ══════════════════════════════════════════════════════════════
+   BASE CSS — Reset & Global Typography
+   ══════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+    --primary-blue: #0D6EFD;
+    --cyan-accent: #00D4FF;
+    --dark-navy: #0A0E1A;
+    --panel-dark: #111827;
+    --card-bg: #1A1F2E;
+    --text-primary: #E2E8F0;
+    --text-secondary: #94A3B8;
+    --text-muted: #64748B;
+    --success-green: #10B981;
+    --warning-amber: #F59E0B;
+    --error-red: #EF4444;
+    --glow-blue: rgba(13, 110, 253, 0.35);
+    --glow-cyan: rgba(0, 212, 255, 0.25);
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    color: var(--text-primary);
+    background: var(--dark-navy);
+}
+
+h1, h2, h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+code, pre, .mono {
+    font-family: 'JetBrains Mono', monospace;
+}
